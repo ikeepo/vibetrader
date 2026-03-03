@@ -3,7 +3,7 @@ import { Path } from "../../svg/Path";
 import type { ChartYControl } from "../view/ChartYControl";
 import type { ChartXControl } from "../view/ChartXControl";
 import type { PlotOptions } from "./Plot";
-import type { LinePoint, PineData } from "../../domain/PineData";
+import type { LineObject, PineData } from "../../domain/PineData";
 
 type Props = {
     xc: ChartXControl,
@@ -19,58 +19,67 @@ const PlotDrawingLine = (props: Props) => {
     const { xc, yc, tvar, name, atIndex, depth, options } = props
 
     function plot() {
-        const path = new Path()
-
-        const points = collectPoints();
-
-        let prevY: number
-        for (let m = 0; m < points.length; m++) {
-            const [x, y] = points[m]
-
-            if (y !== undefined) {
-                if (prevY === undefined) {
-                    // new segment
-                    path.moveto(x, y)
-
-                } else {
-                    path.lineto(x, y)
-                }
-            }
-
-            prevY = y
-        }
-
-        return { path }
-    }
-
-    function collectPoints() {
-        const points: number[][] = []
+        const lines = new Map<number, Path>();
 
         const datas = tvar.getByIndex(0);
         const data = datas ? datas[atIndex] : undefined;
-        const coordinates = data ? data.value as LinePoint[] : undefined;
-        if (coordinates !== undefined) {
-            for (let i = 0; i < coordinates.length; i++) {
-                const { x1, y1 } = coordinates[i]
-                const bar = xc.br(x1);
-                const xPos = xc.xb(bar)
-                const yPos = yc.yv(y1)
-                console.log(bar, x1, y1)
+        const lineObject = data ? data.value as LineObject[] : undefined;
+        if (lineObject !== undefined) {
+            for (let i = 0; i < lineObject.length; i++) {
+                const { id, color, x1, y1, x2, y2, style, width, xloc } = lineObject[i]
 
-                if (xPos !== undefined && yPos !== undefined) {
-                    points.push([xPos, yPos])
+                let xPos1: number;
+                let xPos2: number;
+                switch (xloc) {
+                    case 'time':
+                        xPos1 = xc.xb(xc.bt(x1));
+                        xPos2 = xc.xb(xc.bt(x2));
+                        break
+
+                    case 'bar_index':
+                    default:
+                        xPos1 = xc.xb(xc.br(x1));
+                        xPos2 = xc.xb(xc.br(x2));
+                        break
+                }
+
+                const yPos1 = yc.yv(y1)
+                const yPos2 = yc.yv(y2)
+
+                let path = lines.get(id);
+                if (!path) {
+                    path = new Path();
+                    lines.set(id, path);
+                }
+
+                path.moveto(xPos1, yPos1)
+                path.lineto(xPos2, yPos2)
+                path.stroke = color;
+                path.strokeWidth = width;
+                switch (style) {
+                    case 'style_dashed':
+                        path.strokeDasharray = "4 3"
+                        break
+
+                    case 'style_dotted':
+                        path.strokeDasharray = "1 2"
+                        break
+
+                    case "style_solid":
+                    default:
                 }
             }
-
         }
 
-        return points
+        return lines
     }
 
-    const { path } = plot();
+    const lines = plot();
 
     return (
-        path.render({ style: { stroke: 'red', fill: 'none' } })
+        <>
+            {Array.from(lines.entries()).map(([id, path]) => path.render({ key: id }))}
+        </>
     )
 }
 

@@ -114,7 +114,8 @@ type State = {
 
 
 const allIndTags = dev
-    ? ['ema', 'bb', 'rsi', 'macd', 'kdj', 'signals']
+    ? ['lines']
+    // ? ['ema', 'bb', 'rsi', 'macd', 'kdj', 'signals']
     : ['sma', 'ema', 'bb', 'rsi', 'macd', 'kdj']
 
 export const HSPACING = 25;

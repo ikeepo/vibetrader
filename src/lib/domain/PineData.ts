@@ -1,16 +1,25 @@
 import type { TFrame } from "../timeseris/TFrame";
 
-export type LinePoint = {
-    id: number,
-    x1: number,
-    y1: number
+export type LineObject = {
+    id: number;
+    x1: number;
+    y1: number;
+    x2: number;
+    y2: number;
+    xloc: string;
+    extend: string;
+    color: string;
+    style: string;
+    width: number;
+    force_overlay: boolean;
+    _deleted: boolean;
 }
 
 // Data type from Pine
 export type PineData = {
     title?: string,
     time: number,
-    value: number | boolean | LinePoint[],
+    value: number | boolean | LineObject[],
     options?: { color: string }
 }
 
