@@ -16,7 +16,7 @@ import { DefaultTSer } from "../../timeseris/DefaultTSer";
 import { TFrame } from "../../timeseris/TFrame";
 import type { KlineKind } from "../plot/PlotKline";
 import type { Plot } from "../plot/Plot";
-import { dev, source } from "../../domain/Env";
+import { dev, source } from "../../../Env";
 import { tframeToPineTimeframe, type PineData } from "../../domain/PineData";
 import { TSerProvider } from "../../domain/TSerProvider";
 import { Screenshot } from "../pane/Screenshot";

@@ -1,4 +1,4 @@
-import { Source } from "./DataFecther"
+import { Source } from "./lib/domain/DataFecther"
 
 export const dev = false
 

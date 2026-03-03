@@ -8,7 +8,7 @@ import { ActionButtonGroup, Autocomplete, useAsyncList, Menu, MenuItem, MenuTrig
 import { style } from '@react-spectrum/s2/style' with {type: 'macro'};
 import { TFrame } from "../../timeseris/TFrame";
 import { fetchSymbolList } from "../../domain/DataFecther";
-import { source } from "../../domain/Env";
+import { source } from "../../../Env";
 
 type Props = {
     xc: ChartXControl,
