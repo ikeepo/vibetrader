@@ -22,7 +22,7 @@ function App() {
 
     const systemScheme = getMatches('(prefers-color-scheme: dark)') ? 'dark' : 'light';
 
-    const [colorScheme, setColorScheme] = useState(systemScheme);
+    const [colorScheme, setColorScheme] = useState<ColorScheme>(systemScheme);
 
     const toggleColorTheme = () => {
         switch (colorScheme) {
@@ -37,7 +37,7 @@ function App() {
     }
 
     return (
-        <Provider colorScheme={colorScheme as 'light' | 'dark'} background="base" router={{ navigate, useHref }} >
+        <Provider colorScheme={colorScheme} background="base" router={{ navigate, useHref }} >
             {/* Color Theme Selector */}
             <div>
                 <select hidden id="color-scheme" value={colorScheme} onChange={() => { }}>
